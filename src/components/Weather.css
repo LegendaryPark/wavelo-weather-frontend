@@ -1,0 +1,20 @@
+.toggle-button {
+  padding: 10px 20px;
+  background-color: #ddd;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  border-radius: 50%;
+  width: 100px;
+}
+
+.toggle-button.on {
+  background-color: #4caf50;
+  color: white;
+}
+
+.toggle-button.off {
+  background-color: #f44336;
+  color: white;
+}
