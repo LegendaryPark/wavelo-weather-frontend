@@ -1,47 +1,47 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { loadState, saveState } from "../utils/storage";
 
 interface WeatherContextType {
-  weather: WeatherData;
-  setWeather: React.Dispatch<React.SetStateAction<WeatherData>>;
-  updateWeather: (city: string, currentWeather: WeatherData) => void;
+  isToggled: boolean;
+  toggleWeather: () => void;
+  updateCity: (updatedCity: string) => void;
+  city: string;
+  temperatureUnit: TemperatureUnit;
 }
 const WeatherContext = createContext<WeatherContextType | undefined>(undefined);
 interface WeatherProviderProps {
   children: ReactNode;
 }
 
-const initialWeatherData: WeatherData = {
-  current_weather: {
-    temperature: 0,
-    time: "",
-  },
-  daily: {
-    temperature_2m_min: [],
-    temperature_2m_max: [],
-    time: [],
-  },
-};
-
 export const WeatherProvider: React.FC<WeatherProviderProps> = ({
   children,
 }) => {
-  const [weather, setWeather] = useState<WeatherData>(
-    loadState("CurrentLocation") ?? initialWeatherData
-  );
+  const [isToggled, setIsToggle] = useState<boolean>(false);
+  const [city, setCity] = useState<string>("");
+  const [temperatureUnit, setTemperatureUnit] =
+    useState<TemperatureUnit>("celsius");
 
-  const updateWeather = (city: string, currentWeather: WeatherData) => {
-    const newWeather: WeatherData = { ...currentWeather };
-    setWeather(newWeather);
-    saveState(city, newWeather);
+  const toggleWeather = () => {
+    const newToggle = !isToggled;
+
+    setTemperatureUnit(currentTemperatureUnit(newToggle));
+    setIsToggle(newToggle);
+  };
+
+  const updateCity = (updatedCity: string) => {
+    setCity(updatedCity);
+  };
+  const currentTemperatureUnit = (toggle: boolean): TemperatureUnit => {
+    return toggle ? "fahrenheit" : "celsius";
   };
 
   return (
     <WeatherContext.Provider
       value={{
-        weather,
-        setWeather,
-        updateWeather,
+        isToggled,
+        toggleWeather,
+        updateCity,
+        city,
+        temperatureUnit,
       }}
     >
       {children}
